@@ -43,10 +43,10 @@ public class BurgerJoint {
 			System.out.println("Finished Eating Burgers");
 		}
 	}
-	public static void main(final String[] args) {
+	/*public static void main(final String[] args) {
 		final Producer producer = new Producer();
 		final Consumer consumer = new Consumer();
 		producer.start();
 		consumer.start();
-	}
+	}*/
 }

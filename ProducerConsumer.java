@@ -1,10 +1,10 @@
 
 public class BurgerBuffer { 
-	private final int MaxBuffSize; 
+	private int MaxBuffSize; 
 	private char[] store; 
 	private int BufferStart; 
 	private int BufferEnd;
-	private int BufferSize;
+	int BufferSize;
 	int p = 0;
 	int c = 0;
 	public BurgerBuffer(int size) { 
@@ -22,6 +22,7 @@ public class BurgerBuffer {
 			BufferEnd = (BufferEnd + 1) % MaxBuffSize; 
 			store[BufferEnd] = ch; 
 			BufferSize++; 
+			
 			System.out.println("Making a Burger: " + p);
 
 		} catch (InterruptedException e) { 
@@ -50,7 +51,11 @@ class Consumer extends Thread {
 	public void run() { 
 		System.out.println("Consumer Starting");
 
-		while (!Thread.currentThread().isInterrupted()) { 
+		while (buffer.c < buffer.BufferSize) { 
+			try{
+				Thread.sleep(1000);
+				}
+				catch(InterruptedException e){}
 			char c = buffer.delete(); 
 			System.out.print(c); 
 		} 
@@ -60,14 +65,16 @@ class Consumer extends Thread {
 		private final BurgerBuffer buffer; 
 		public Producer(BurgerBuffer b) { buffer = b; }
 		public void run() { 
-			try { 
-				while (!Thread.currentThread().isInterrupted()){ 
+				while (buffer.p < buffer.BufferSize) { 
+					try{
+						Thread.sleep(1000);
+						}
+						catch(InterruptedException e){}
 					int c = buffer.p; 
 					if (c == -1) break; // -1 is eof 
 					buffer.insert((char)c); 
 				} 
-			} catch (InterruptedException e) {} 
-		}
+			}
 	}
 	class BoundedBuffer { 
 		public static void main(String[] args) { 
