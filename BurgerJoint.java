@@ -1,5 +1,8 @@
+import java.util.LinkedList;
+
 public class BurgerJoint {
-	static int buf;
+	//static int buf;
+	static LinkedList<Integer> buf = new LinkedList<>();
 	static int p = 0;
 	static int c = 0;
 	static int n = 5;
@@ -7,19 +10,30 @@ public class BurgerJoint {
 		int a = 0;
 		public void run(){
 			System.out.println("Producer Starting");
-			while(p < n){
-				try{
-				Thread.sleep(1000);
-				}
-				catch(InterruptedException e){}
-				while(p != c){
-					System.out.println("Short order cook spinning");
-				}
-				a = (int)Math.random() * 100;
-				System.out.println("Making a Burger: " + p);
-				buf = a;
-				p = p + 1;
-			}
+			
+			
+                    // producer waits while buffer 
+                    // is full 
+					while (buf.size() == n) 
+					{
+						try{
+							Thread.sleep(1000);
+							}
+							catch(InterruptedException e){}
+					}
+                    System.out.println("Making a Burger: " + a); 
+  
+                    // to insert the jobs in the list 
+                    buf.add(a++); 
+  
+                    // notifies the consumer thread that 
+                    // now it can start consuming 
+                   // notify(); 
+  
+                    // makes the working of program easier 
+                    // to  understand 
+                    //Thread.sleep(1000); 
+                //} 
 			System.out.println("Finished Making Burgers");
 		}
 	}
@@ -27,26 +41,35 @@ public class BurgerJoint {
 		int b = 0;
 		public void run(){
 			System.out.println("Consumer Starting");
-			while(c < n){
-				try{
-					Thread.sleep(2000);
-					}
-					catch(InterruptedException e){}
-				while(p <= c){
-					System.out.println("Starving waiting on a burger!");
-				}
-				System.out.println("Eating Burger: " + c);
-				b = buf;
-				c = c + 1;
-				
-			}
-			System.out.println("Finished Eating Burgers");
+			
+                    // consumer waits while buffer 
+                    // is empty 
+                    while (buf.size() == 0) 
+					{
+						try{
+							Thread.sleep(1000);
+							}
+							catch(InterruptedException e){}
+					}  
+                    // to retrive the ifrst job in the list 
+                    final int val = buf.removeFirst();
+  
+                    System.out.println("Eating Burger: " + val); 
+  
+                    // Wake up producer thread 
+                    //notify(); 
+  
+                    // and sleep 
+                    //Thread.sleep(1000); 
+                	System.out.println("Finished Eating Burgers");
+
+            //} 
 		}
 	}
-	/*public static void main(final String[] args) {
+	public static void main(final String[] args) {
 		final Producer producer = new Producer();
 		final Consumer consumer = new Consumer();
 		producer.start();
 		consumer.start();
-	}*/
+	}
 }
